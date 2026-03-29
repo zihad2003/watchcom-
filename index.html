@@ -23,7 +23,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { overflow-x: hidden; scroll-behavior: smooth; }
         body { background: var(--bg-deep); color: #fff; font-family: var(--font-body); overflow-x: hidden; }
-        body.custom-cursor-active * { cursor: none !important; }
 
         /* 1. CUSTOM CURSOR */
         #cursor-dot {
@@ -231,6 +230,45 @@
         .craft-icon svg { width: 60px; height: 60px; stroke: var(--gold); stroke-width: 1; fill: none; }
 
         /* -------------------------------------------------------------------------- */
+        /* 9. WATCH CONFIGURATOR */
+        /* -------------------------------------------------------------------------- */
+        .customizer { padding: 8rem 4rem; background: var(--bg-deep); border-top: 1px solid rgba(201,168,76,0.2); }
+        .customizer-content { display: flex; align-items: center; justify-content: center; gap: 8rem; margin-top: 5rem; }
+        .customizer-preview { position: relative; width: 350px; height: 500px; }
+        
+        .cw-case { position: absolute; top: 100px; left: 25px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, #555, #222); border: 12px solid #555; transition: 0.5s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .cw-dial { position: absolute; top: 120px; left: 45px; width: 260px; height: 260px; border-radius: 50%; background: #151515; border: 4px solid var(--gold); transition: 0.5s ease; box-shadow: inset 0 0 30px #000; display: flex; align-items: center; justify-content: center; z-index: 2; }
+        .cw-dial::after { content: 'AETERNA'; color: var(--gold); font-family: var(--font-head); font-size: 1.2rem; letter-spacing: 4px; position: absolute; top: 50px; }
+        .cw-hands { position: absolute; width:100%; height:100%; top:0; left:0; z-index: 3; }
+        .cw-hands::before { content:''; position:absolute; bottom:50%; left:50%; width:4px; height:100px; background:var(--gold); transform-origin:bottom; transform: translateX(-50%) rotate(45deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .cw-hands::after { content:''; position:absolute; bottom:50%; left:50%; width:2px; height:120px; background:#fff; transform-origin:bottom; transform: translateX(-50%) rotate(180deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .cw-strap-top { position: absolute; top: 0; left: 110px; width: 130px; height: 120px; background: #1a1a1a; border-radius: 10px 10px 0 0; border: 1px solid #222; transition: 0.5s ease; }
+        .cw-strap-bot { position: absolute; bottom: 0; left: 110px; width: 130px; height: 120px; background: #1a1a1a; border-radius: 0 0 10px 10px; border: 1px solid #222; transition: 0.5s ease; }
+        .cw-glass { position: absolute; top: 100px; left: 25px; width: 300px; height: 300px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 50%, rgba(255,255,255,0.1) 100%); pointer-events: none; z-index: 5; }
+        
+        /* Config colors */
+        .cw-case.rose { background: radial-gradient(circle, #b76e79, #5a363b); border-color: #b76e79; }
+        .cw-case.obsidian { background: radial-gradient(circle, #222, #000); border-color: #111; }
+        .cw-dial.emerald { background: #0b2b1d; }
+        .cw-dial.arctic { background: #e8ecef; }
+        .cw-dial.arctic::after { color: #111; font-weight: 600; }
+        .cw-strap-top.tan, .cw-strap-bot.tan { background: #8b5a2b; border-color: #5c3a1a; }
+        .cw-strap-top.steel, .cw-strap-bot.steel { background: repeating-linear-gradient(90deg, #777, #999 10px, #555 20px); border-radius: 0; }
+        
+        .customizer-controls { width: 450px; background: var(--bg-panel); padding: 3rem; border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; }
+        .control-group { margin-bottom: 2rem; }
+        .control-group h4 { color: #fff; font-family: var(--font-body); font-weight: 500; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+        .opt-btn { display: flex; align-items: center; width: 100%; background: transparent; border: 1px solid #333; color: #aaa; padding: 1rem; margin-bottom: 0.5rem; text-align: left; transition: 0.3s; cursor: none; font-family: var(--font-body); border-radius: 4px; }
+        .opt-btn span { width: 15px; height: 15px; border-radius: 50%; margin-right: 15px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
+        .opt-btn:hover { border-color: var(--gold); color: #fff; }
+        .opt-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.05); }
+        
+        .config-price { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; border-top: 1px solid #333; padding-top: 2rem; }
+        #cfg-price { font-family: var(--font-head); font-size: 2.5rem; color: #fff; }
+        
+        @media(max-width: 1024px) { .customizer-content { flex-direction: column; } .customizer-controls { width: 100%; } }
+
+        /* -------------------------------------------------------------------------- */
         /* 6. CINEMATIC TEXT BANNER */
         /* -------------------------------------------------------------------------- */
         .banner {
@@ -428,6 +466,49 @@
         </div>
     </section>
 
+    <!-- 9. Customizer -->
+    <section class="customizer" id="customizer">
+        <div style="text-align: center;">
+            <p style="color:var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 1rem;">Bespoke Creation</p>
+            <h2 style="font-family: var(--font-head); font-size: 3rem;">CONFIGURE YOUR AETERNA</h2>
+        </div>
+        <div class="customizer-content">
+            <div class="customizer-preview">
+                <div class="cw-strap-top" id="cw-strap-top"></div>
+                <div class="cw-case" id="cw-case"></div>
+                <div class="cw-dial" id="cw-dial">
+                    <div class="cw-hands"></div>
+                </div>
+                <div class="cw-strap-bot" id="cw-strap-bot"></div>
+                <div class="cw-glass"></div>
+            </div>
+            <div class="customizer-controls">
+                <div class="control-group" id="cg-case">
+                    <h4>Case Finish</h4>
+                    <button class="opt-btn active c-hover" onclick="setOpt('case', 'titanium', 14500, this)"><span style="background:#555"></span>Titanium Grade 5</button>
+                    <button class="opt-btn c-hover" onclick="setOpt('case', 'rose', 18200, this)"><span style="background:#b76e79"></span>Rose Gold 18k</button>
+                    <button class="opt-btn c-hover" onclick="setOpt('case', 'obsidian', 16000, this)"><span style="background:#0a0a0a"></span>Obsidian Ceramic</button>
+                </div>
+                <div class="control-group" id="cg-dial">
+                    <h4>Dial Layout</h4>
+                    <button class="opt-btn active c-hover" onclick="setOpt('dial', 'midnight', 0, this)"><span style="background:#151515"></span>Midnight Black</button>
+                    <button class="opt-btn c-hover" onclick="setOpt('dial', 'emerald', 400, this)"><span style="background:#0b2b1d"></span>Emerald Forest</button>
+                    <button class="opt-btn c-hover" onclick="setOpt('dial', 'arctic', 300, this)"><span style="background:#e8ecef; border:1px solid #ccc;"></span>Arctic White</button>
+                </div>
+                <div class="control-group" id="cg-strap">
+                    <h4>Strap Material</h4>
+                    <button class="opt-btn active c-hover" onclick="setOpt('strap', 'black', 0, this)"><span style="background:#1a1a1a"></span>Black Calfskin</button>
+                    <button class="opt-btn c-hover" onclick="setOpt('strap', 'tan', 200, this)"><span style="background:#8b5a2b"></span>Tan Alligator</button>
+                    <button class="opt-btn c-hover" onclick="setOpt('strap', 'steel', 850, this)"><span style="background:#777"></span>Matching Bracelet</button>
+                </div>
+                <div class="config-price">
+                    <span id="cfg-price">$14,500</span>
+                    <button class="cta-btn c-hover">Order Bespoke</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 6. Cinematic Text Banner -->
     <section class="banner" id="banner">
         <div class="banner-words" id="banner-words">
@@ -473,9 +554,6 @@
         let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
         
         window.addEventListener('mousemove', (e) => {
-            if (!document.body.classList.contains('custom-cursor-active')) {
-                document.body.classList.add('custom-cursor-active');
-            }
             mouseX = e.clientX; mouseY = e.clientY;
             cursorDot.style.left = mouseX + 'px'; cursorDot.style.top = mouseY + 'px';
         });
@@ -693,6 +771,29 @@
                 document.getElementById('banner-rule').style.width = '100%';
             }
         });
+
+        // 9. CONFIGURATOR LOGIC
+        let cfgBase=14500, cfgDial=0, cfgStrap=0;
+        
+        window.setOpt = function(part, value, price, btn) {
+            btn.parentElement.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if(part === 'case') { document.getElementById('cw-case').className = 'cw-case ' + value; cfgBase = price; }
+            if(part === 'dial') { document.getElementById('cw-dial').className = 'cw-dial ' + value; cfgDial = price; }
+            if(part === 'strap') { 
+                document.getElementById('cw-strap-top').className = 'cw-strap-top ' + value; 
+                document.getElementById('cw-strap-bot').className = 'cw-strap-bot ' + value; 
+                cfgStrap = price; 
+            }
+            
+            let total = cfgBase + cfgDial + cfgStrap;
+            let pEl = document.getElementById('cfg-price');
+            gsap.to(pEl, {
+                innerHTML: total, duration: 0.5, snap: { innerHTML: 1 },
+                onUpdate: () => pEl.innerHTML = '$' + Number(pEl.innerHTML).toLocaleString()
+            });
+        };
 
     </script>
 </body>
