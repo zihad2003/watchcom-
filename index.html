@@ -20,9 +20,10 @@
             --font-body: 'Montserrat', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         html { overflow-x: hidden; scroll-behavior: smooth; }
         body { background: var(--bg-deep); color: #fff; font-family: var(--font-body); overflow-x: hidden; }
+        body.custom-cursor-active * { cursor: none !important; }
 
         /* 1. CUSTOM CURSOR */
         #cursor-dot {
@@ -369,7 +370,7 @@
     <!-- 4. Collections Grid -->
     <section class="collections" id="collections">
         <div style="text-align: center; margin-bottom: 4rem;">
-            <p style="color:var(--gold); letter-spacing: 4px; uppercase; margin-bottom: 1rem;">Curated</p>
+            <p style="color:var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 1rem;">Curated</p>
             <h2 style="font-family: var(--font-head); font-size: 3rem;">THE LEGACY COLLECTION</h2>
         </div>
         <div class="col-grid" id="col-grid">
@@ -472,6 +473,9 @@
         let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
         
         window.addEventListener('mousemove', (e) => {
+            if (!document.body.classList.contains('custom-cursor-active')) {
+                document.body.classList.add('custom-cursor-active');
+            }
             mouseX = e.clientX; mouseY = e.clientY;
             cursorDot.style.left = mouseX + 'px'; cursorDot.style.top = mouseY + 'px';
         });
