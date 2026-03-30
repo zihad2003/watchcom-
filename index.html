@@ -1123,16 +1123,41 @@
         dialMesh.rotation.x = -Math.PI / 2;
         watchGroup.add(dialMesh);
 
-        // Sub-dials
+        // Sub-dials (Left and Right)
         const subDialGeom = new THREE.CircleGeometry(0.25, 32);
         const subDialMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.5 });
-        for(let i=0; i<3; i++) {
+        for(let i=0; i<2; i++) {
             const sub = new THREE.Mesh(subDialGeom, subDialMat);
-            const angle = (i * Math.PI * 2) / 3;
+            const angle = i === 0 ? Math.PI + Math.PI/6 : -Math.PI/6;
             sub.position.set(Math.cos(angle) * 0.45, 0.22, Math.sin(angle) * 0.45);
             sub.rotation.x = -Math.PI / 2;
             watchGroup.add(sub);
         }
+
+        // 3D Pendulum / Open-Heart Tourbillon (6 o'clock)
+        const tourbillonGroup = new THREE.Group();
+        tourbillonGroup.position.set(0, 0.21, 0.55);
+        watchGroup.add(tourbillonGroup);
+
+        const holeMat = new THREE.MeshBasicMaterial({ color: 0x010101 });
+        const hole = new THREE.Mesh(new THREE.CircleGeometry(0.28, 32), holeMat);
+        hole.rotation.x = -Math.PI / 2;
+        tourbillonGroup.add(hole);
+
+        const pendulumGroup = new THREE.Group();
+        tourbillonGroup.add(pendulumGroup);
+
+        const pendulumCore = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.1, 16), metalMat);
+        pendulumGroup.add(pendulumCore);
+        
+        const pendulumArm = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.02, 0.06), goldMat);
+        pendulumArm.position.y = 0.04;
+        pendulumGroup.add(pendulumArm);
+
+        const pendulumRing = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.03, 16, 64), goldMat);
+        pendulumRing.rotation.x = Math.PI / 2;
+        pendulumRing.position.y = 0.04;
+        pendulumGroup.add(pendulumRing);
 
         // Hour Markers
         for (let i = 0; i < 12; i++) {
@@ -1226,6 +1251,10 @@
             requestAnimationFrame(animate);
             // Slow elegant auto-rotation
             watchGroup.rotation.y += 0.002;
+            
+            // Pendulum high-frequency swing (simulating 4Hz / 28,800 vph)
+            pendulumGroup.rotation.y = Math.sin(Date.now() * 0.015) * 1.5;
+
             // Float
             watchGroup.position.y = Math.sin(Date.now() * 0.001) * 0.1;
             // Tilt lerp
