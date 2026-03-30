@@ -9,6 +9,7 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
         /* === ADDED BY COMPLETION PASS === */
@@ -72,16 +73,9 @@
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 0 120px rgba(201,168,76,0.3); z-index: 2;
         }
-        .hero-watch-wrap { position: absolute; z-index: 3; }
-        .hero-watch {
-            width: 250px; height: 400px;
-            background: url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=600&auto=format&fit=crop') center/cover;
-            border-radius: 120px;
-            animation: floatWatch 4s ease-in-out infinite; box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
-        }
-        @keyframes floatWatch {
-            0%, 100% { transform: translateY(-15px); }
-            50% { transform: translateY(15px); }
+        #hero-3d {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3;
+            width: 300px; height: 300px;
         }
         .hero-text-wrap { position: relative; z-index: 4; text-align: center; margin-top: 15vh; }
         .hero-title { font-family: var(--font-head); font-size: 96px; letter-spacing: 0.15em; line-height: 1; margin-bottom: 2rem; }
@@ -317,6 +311,100 @@
         
         .copyright { color: #555; font-size: 0.9rem; letter-spacing: 2px; }
 
+        /* -------------------------------------------------------------------------- */
+        /* NEW SECTIONS */
+        /* -------------------------------------------------------------------------- */
+
+        /* Heritage Timeline */
+        .heritage { padding: 8rem 4rem; background: var(--bg-deep); text-align: center; }
+        .heritage h2 { font-family: var(--font-head); font-size: 3rem; color: var(--gold); margin-bottom: 4rem; }
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: var(--gold); transform: translateX(-50%); }
+        .timeline-item { display: flex; align-items: center; margin: 4rem 0; opacity: 0; transform: translateX(0); transition: 0.8s; }
+        .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+        .timeline-item.visible { opacity: 1; }
+        .timeline-item:nth-child(even).visible { transform: translateX(-50px); }
+        .timeline-item:nth-child(odd).visible { transform: translateX(50px); }
+        .timeline-dot { width: 20px; height: 20px; background: var(--gold); border-radius: 50%; margin: 0 2rem; flex-shrink: 0; }
+        .timeline-content { text-align: left; max-width: 300px; }
+        .timeline-year { font-family: var(--font-head); font-size: 3rem; color: var(--gold); margin-bottom: 0.5rem; }
+        .timeline-title { font-family: var(--font-body); font-size: 1.5rem; font-weight: 500; color: #fff; margin-bottom: 0.5rem; }
+        .timeline-desc { font-size: 0.9rem; color: #888; line-height: 1.6; }
+
+        /* Testimonials */
+        .testimonials { padding: 8rem 4rem; background: var(--bg-panel); text-align: center; position: relative; }
+        .testimonials h2 { font-family: var(--font-head); font-size: 3rem; color: #fff; margin-bottom: 1rem; }
+        .testimonials .subtitle { color: var(--gold); font-family: var(--font-body); font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4rem; }
+        .testimonial { opacity: 0; transition: opacity 1s; position: absolute; width: 100%; top: 50%; transform: translateY(-50%); }
+        .testimonial.active { opacity: 1; }
+        .testimonial-quote { font-family: var(--font-head); font-size: 6rem; color: var(--gold); line-height: 1; margin-bottom: 2rem; }
+        .testimonial-text { font-family: var(--font-head); font-size: 2rem; font-style: italic; color: #fff; max-width: 700px; margin: 0 auto 1rem; }
+        .testimonial-author { font-family: var(--font-body); font-size: 0.9rem; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+        .testimonial-dots { display: flex; justify-content: center; gap: 1rem; margin-top: 3rem; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: #444; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: var(--gold); }
+
+        /* Press */
+        .press { padding: 6rem 4rem; background: var(--bg-deep); text-align: center; }
+        .press h2 { font-family: var(--font-head); font-size: 1.5rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4rem; }
+        .marquee { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: scroll 30s linear infinite; }
+        .press-logo { display: inline-block; font-family: var(--font-head); font-size: 1.8rem; color: #444; margin: 0 2rem; transition: color 0.3s; cursor: pointer; }
+        .press-logo:hover { color: var(--gold); }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .awards { display: flex; justify-content: center; gap: 4rem; margin-top: 4rem; }
+        .award { border: 1px solid var(--gold); padding: 2rem; background: rgba(201,168,76,0.05); text-align: center; }
+        .award h3 { font-family: var(--font-head); font-size: 1.2rem; color: var(--gold); margin-bottom: 0.5rem; }
+        .award p { font-family: var(--font-body); font-size: 0.8rem; color: #888; }
+
+        /* Process */
+        .process { padding: 8rem 4rem; background: var(--bg-panel); }
+        .process h2 { font-family: var(--font-head); font-size: 3rem; color: var(--gold); text-align: center; margin-bottom: 4rem; }
+        .process-steps { display: flex; justify-content: space-around; gap: 2rem; }
+        .process-step { text-align: center; position: relative; padding: 2rem; border-top: 2px solid transparent; transition: 0.5s; }
+        .process-step:hover { border-top-color: var(--gold); transform: translateY(-10px); }
+        .step-number { font-family: var(--font-head); font-size: 4rem; color: var(--gold); opacity: 0.15; position: absolute; top: -1rem; left: 50%; transform: translateX(-50%); }
+        .step-icon { width: 50px; height: 50px; stroke: var(--gold); fill: none; margin-bottom: 1rem; }
+        .step-title { font-family: var(--font-body); font-size: 1rem; font-weight: 500; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+        .step-desc { font-size: 0.85rem; color: #888; line-height: 1.6; }
+
+        /* Contact */
+        .contact { padding: 6rem 4rem; background: var(--bg-deep); border-top: 1px solid rgba(201,168,76,0.2); }
+        .contact-content { display: flex; gap: 4rem; }
+        .contact-left { flex: 1; }
+        .contact-left h2 { font-family: var(--font-head); font-size: 3rem; color: var(--gold); margin-bottom: 2rem; }
+        .contact-left p { font-size: 1rem; color: #888; margin-bottom: 2rem; }
+        .boutique { margin-bottom: 1.5rem; border-bottom: 1px solid #333; padding-bottom: 1rem; }
+        .boutique-city { font-family: var(--font-head); font-size: 1.2rem; color: var(--gold); margin-bottom: 0.5rem; }
+        .boutique-addr { font-size: 0.9rem; color: #ccc; margin-bottom: 0.2rem; }
+        .boutique-phone { font-size: 0.8rem; color: #888; }
+        .contact-right { flex: 1; }
+        .contact-form { background: var(--bg-panel); padding: 3rem; border: 1px solid rgba(201,168,76,0.2); }
+        .form-group { margin-bottom: 2rem; }
+        .form-group input, .form-group select { width: 100%; background: transparent; border: none; border-bottom: 1px solid #444; padding: 1rem 0; color: #fff; font-family: var(--font-body); transition: 0.3s; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-bottom-color: var(--gold); }
+        .form-group select { cursor: pointer; }
+        .submit-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 1rem; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: #b8944a; }
+        .form-success { text-align: center; font-family: var(--font-head); font-size: 2rem; color: var(--gold); display: none; }
+
+        /* Responsive for new sections */
+        @media(max-width: 1024px) {
+            .heritage, .testimonials, .press, .process, .contact { padding: 6rem 2rem; }
+            .process-steps { flex-direction: column; gap: 4rem; }
+            .contact-content { flex-direction: column; gap: 4rem; }
+            .awards { flex-direction: column; gap: 2rem; }
+        }
+        @media(max-width: 768px) {
+            .timeline-item { flex-direction: column; text-align: center; }
+            .timeline-dot { margin: 1rem 0; }
+            .testimonial-quote { font-size: 4rem; }
+            .testimonial-text { font-size: 1.5rem; }
+            .press-logo { font-size: 1.2rem; margin: 0 1rem; }
+            .step-number { font-size: 3rem; }
+            .boutique { text-align: center; }
+        }
+
         /* Responsive */
         @media(max-width: 1024px) {
             .anatomy-section { flex-direction: column; }
@@ -339,7 +427,7 @@
             .hero-title { font-size: 36px; letter-spacing: 0.08em; }
             .hero-subtitle { font-size: 0.9rem; letter-spacing: 2px; }
             .hero-text-wrap { margin-top: 20vh; }
-            .hero-watch { width: 140px; height: 225px; }
+            #hero-3d { width: 280px; height: 280px; }
             .anatomy-section, .collections, .customizer { padding: 4rem 1.5rem; }
             .banner-word { font-size: 36px; }
             .banner-words { flex-direction: column; gap: 0.5rem; }
@@ -432,9 +520,7 @@
     <section class="hero">
         <canvas id="canvas-particles"></canvas>
         <div class="hero-glow"></div>
-        <div class="hero-watch-wrap">
-            <div class="hero-watch" id="hero-watch"></div>
-        </div>
+        <canvas id="hero-3d"></canvas>
         <div class="hero-text-wrap">
             <h1 class="hero-title" id="hero-title">THE ORIGIN OF TIME</h1>
             <p class="hero-subtitle" id="hero-subtitle">Precision crafted. Eternally worn.</p>
@@ -509,6 +595,119 @@
         </div>
     </section>
 
+    <!-- A. Brand Heritage Timeline -->
+    <section class="heritage" id="heritage">
+        <h2>A CENTURY OF PRECISION</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1924</div>
+                    <div class="timeline-title">Born in Geneva</div>
+                    <div class="timeline-desc">Founded in the mountain ateliers of Switzerland, AETERNA produced its first pocket movement with 19 jewels.</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1948</div>
+                    <div class="timeline-title">The First Diver</div>
+                    <div class="timeline-desc">AETERNA introduced its iconic 100m water-resistant diver, redefining adventure horology.</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1972</div>
+                    <div class="timeline-title">The Mechanical Revolution</div>
+                    <div class="timeline-desc">An in-house movement beating at 28,800 vph became the industry benchmark.</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2001</div>
+                    <div class="timeline-title">The Titan Era</div>
+                    <div class="timeline-desc">Grade-5 titanium cases, pioneering lightweight luxury for a new generation.</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-title">AETERNA Today</div>
+                    <div class="timeline-desc">100 years on. Every second still counts.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- B. Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <h2>WORN BY VISIONARIES</h2>
+        <p class="subtitle">CLIENT VOICES</p>
+        <div class="testimonial active" id="testimonial-0">
+            <div class="testimonial-quote">&ldquo;</div>
+            <p class="testimonial-text">AETERNA is not just a watch — it is a philosophy I wear every day.</p>
+            <p class="testimonial-author">Laurent M., CEO, Geneva</p>
+        </div>
+        <div class="testimonial" id="testimonial-1">
+            <div class="testimonial-quote">&ldquo;</div>
+            <p class="testimonial-text">I've owned Patek, AP and Rolex. Nothing compares to the AETERNA Aurora on my wrist.</p>
+            <p class="testimonial-author">Priya S., Art Collector, Dubai</p>
+        </div>
+        <div class="testimonial" id="testimonial-2">
+            <div class="testimonial-quote">&ldquo;</div>
+            <p class="testimonial-text">The craftsmanship is without rival. A mechanical miracle in 42mm.</p>
+            <p class="testimonial-author">James H., Architect, New York</p>
+        </div>
+        <div class="testimonial-dots">
+            <div class="dot active" data-slide="0"></div>
+            <div class="dot" data-slide="1"></div>
+            <div class="dot" data-slide="2"></div>
+        </div>
+    </section>
+
+    <!-- C. Awards & Press -->
+    <section class="press" id="press">
+        <h2>AS SEEN IN</h2>
+        <div class="marquee">
+            <div class="marquee-content">
+                <span class="press-logo c-hover">VOGUE</span>
+                <span class="press-logo c-hover">FORBES</span>
+                <span class="press-logo c-hover">HODINKEE</span>
+                <span class="press-logo c-hover">GQ</span>
+                <span class="press-logo c-hover">WALL ST. JOURNAL</span>
+                <span class="press-logo c-hover">ROBB REPORT</span>
+                <span class="press-logo c-hover">FRACTIONAL</span>
+                <span class="press-logo c-hover">TIME MAGAZINE</span>
+                <!-- Duplicate for seamless -->
+                <span class="press-logo c-hover">VOGUE</span>
+                <span class="press-logo c-hover">FORBES</span>
+                <span class="press-logo c-hover">HODINKEE</span>
+                <span class="press-logo c-hover">GQ</span>
+                <span class="press-logo c-hover">WALL ST. JOURNAL</span>
+                <span class="press-logo c-hover">ROBB REPORT</span>
+                <span class="press-logo c-hover">FRACTIONAL</span>
+                <span class="press-logo c-hover">TIME MAGAZINE</span>
+            </div>
+        </div>
+        <div class="awards">
+            <div class="award">
+                <h3>GPHG 2023</h3>
+                <p>Best Men's Watch</p>
+            </div>
+            <div class="award">
+                <h3>Wallpaper Design Award</h3>
+                <p>2022</p>
+            </div>
+            <div class="award">
+                <h3>Forbes Luxury 50</h3>
+                <p>2024</p>
+            </div>
+        </div>
+    </section>
+
     <!-- 5. Craftsmanship Horizontal Scroll -->
     <section class="craftsmanship" id="craft-wrap">
         <div class="craft-panel active">
@@ -578,6 +777,85 @@
                 <div class="config-price">
                     <span id="cfg-price">$14,500</span>
                     <button class="cta-btn c-hover">Order Bespoke</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- D. Process / How It's Made -->
+    <section class="process" id="process">
+        <h2>THE BESPOKE JOURNEY</h2>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
+                <h3 class="step-title">CONSULT</h3>
+                <p class="step-desc">Book a private session with an AETERNA master watchmaker to define your vision.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <svg class="step-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <h3 class="step-title">DESIGN</h3>
+                <p class="step-desc">Work directly on materials, finishes, and movement selection through our digital atelier.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <svg class="step-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m16.24-3.76l-4.24 4.24m-6-6L3.76 7.76m12.48 12.48l-4.24-4.24m-6 6l-2.24 2.24"/></svg>
+                <h3 class="step-title">CRAFT</h3>
+                <p class="step-desc">Your watch is hand-assembled in Geneva over 6 to 12 weeks by a single artisan.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <svg class="step-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <h3 class="step-title">DELIVER</h3>
+                <p class="step-desc">Shipped in a handcrafted walnut case with a certificate of provenance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- E. Contact / Boutique Locator -->
+    <section class="contact" id="contact">
+        <div class="contact-content">
+            <div class="contact-left">
+                <h2>VISIT US</h2>
+                <p>Our ateliers are open by appointment. Experience AETERNA in person.</p>
+                <div class="boutique">
+                    <div class="boutique-city">Geneva</div>
+                    <div class="boutique-addr">Rue du Rhône 48</div>
+                    <div class="boutique-phone">+41 22 000 1111</div>
+                </div>
+                <div class="boutique">
+                    <div class="boutique-city">Dubai</div>
+                    <div class="boutique-addr">DIFC Gate Avenue</div>
+                    <div class="boutique-phone">+971 4 000 2222</div>
+                </div>
+                <div class="boutique">
+                    <div class="boutique-city">Tokyo</div>
+                    <div class="boutique-addr">Ginza Six, Floor 6</div>
+                    <div class="boutique-phone">+81 3 0000 3333</div>
+                </div>
+            </div>
+            <div class="contact-right">
+                <div class="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <select required>
+                            <option value="">Preferred Boutique</option>
+                            <option value="geneva">Geneva</option>
+                            <option value="dubai">Dubai</option>
+                            <option value="tokyo">Tokyo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Message" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Inquiry</button>
+                    <div class="form-success">YOUR REQUEST HAS BEEN RECEIVED.</div>
                 </div>
             </div>
         </div>
@@ -744,12 +1022,150 @@
 
         window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-        // Hero Mouse Parallax
-        const heroWatch = document.getElementById('hero-watch');
-        window.addEventListener('mousemove', (e) => {
-            let x = (window.innerWidth / 2 - e.clientX) * 0.02;
-            let y = (window.innerHeight / 2 - e.clientY) * 0.02;
-            heroWatch.style.transform = `translate(${x}px, ${y}px)`;
+        // 3D Hero Watch
+        const heroCanvas = document.getElementById('hero-3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        camera.position.z = 5;
+        const renderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true, antialias: true });
+        renderer.setSize(300, 300);
+        renderer.setClearColor(0x000000, 0);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xc9a84c, 1, 100);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+        const rectLight = new THREE.RectAreaLight(0xc9a84c, 2, 10, 10);
+        rectLight.position.set(5, 5, 0);
+        scene.add(rectLight);
+
+        // Watch Group
+        const watchGroup = new THREE.Group();
+        scene.add(watchGroup);
+
+        // Case
+        const caseGeom = new THREE.CylinderGeometry(1.2, 1.2, 0.35, 32);
+        const caseMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.9, roughness: 0.1 });
+        const caseMesh = new THREE.Mesh(caseGeom, caseMat);
+        caseMesh.position.y = 0;
+        watchGroup.add(caseMesh);
+
+        // Bezel
+        const bezelGeom = new THREE.TorusGeometry(1.2, 0.05, 16, 100);
+        const bezelMat = new THREE.MeshStandardMaterial({ color: 0xc9a84c, metalness: 1.0, roughness: 0.05 });
+        const bezelMesh = new THREE.Mesh(bezelGeom, bezelMat);
+        bezelMesh.position.y = 0.2;
+        watchGroup.add(bezelMesh);
+
+        // Dial
+        const dialGeom = new THREE.CircleGeometry(1.1, 32);
+        const dialMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+        const dialMesh = new THREE.Mesh(dialGeom, dialMat);
+        dialMesh.position.y = 0.21;
+        watchGroup.add(dialMesh);
+
+        // Hour Markers
+        for (let i = 0; i < 12; i++) {
+            const markerGeom = new THREE.BoxGeometry(0.05, 0.2, 0.01);
+            const markerMat = new THREE.MeshStandardMaterial({ color: 0xc9a84c });
+            const marker = new THREE.Mesh(markerGeom, markerMat);
+            const angle = (i * Math.PI) / 6;
+            marker.position.set(Math.sin(angle) * 0.9, 0.25, Math.cos(angle) * 0.9);
+            marker.rotation.z = angle;
+            watchGroup.add(marker);
+        }
+
+        // Hands
+        const hourHandGeom = new THREE.BoxGeometry(0.02, 0.6, 0.01);
+        const hourMat = new THREE.MeshStandardMaterial({ color: 0xc9a84c });
+        const hourHand = new THREE.Mesh(hourHandGeom, hourMat);
+        hourHand.position.y = 0.3;
+        watchGroup.add(hourHand);
+
+        const minuteHandGeom = new THREE.BoxGeometry(0.02, 0.8, 0.01);
+        const minuteMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const minuteHand = new THREE.Mesh(minuteHandGeom, minuteMat);
+        minuteHand.position.y = 0.35;
+        watchGroup.add(minuteHand);
+
+        // Strap Top
+        const strapTopGeom = new THREE.BoxGeometry(0.8, 0.4, 0.2);
+        const strapMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9 });
+        const strapTop = new THREE.Mesh(strapTopGeom, strapMat);
+        strapTop.position.set(0, -0.6, 0);
+        watchGroup.add(strapTop);
+
+        // Strap Bottom
+        const strapBottom = strapTop.clone();
+        strapBottom.position.set(0, 0.6, 0);
+        watchGroup.add(strapBottom);
+
+        // Brand Text
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#c9a84c';
+        ctx.font = 'bold 32px Cormorant Garamond';
+        ctx.textAlign = 'center';
+        ctx.fillText('AETERNA', 128, 40);
+        const textTexture = new THREE.CanvasTexture(canvas);
+        const textGeom = new THREE.PlaneGeometry(1.5, 0.4);
+        const textMat = new THREE.MeshBasicMaterial({ map: textTexture, transparent: true });
+        const textMesh = new THREE.Mesh(textGeom, textMat);
+        textMesh.position.set(0, 0.3, 0);
+        watchGroup.add(textMesh);
+
+        // Mouse tilt
+        let targetRotationX = 0, targetRotationY = 0;
+        let currentRotationX = 0, currentRotationY = 0;
+        const isMobile = window.innerWidth < 768;
+        if (!isMobile) {
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * Math.PI / 6; // ±30 deg
+                const y = (e.clientY / window.innerHeight - 0.5) * Math.PI / 6;
+                targetRotationX = y;
+                targetRotationY = x;
+            });
+        }
+
+        // Time update
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const hourAngle = (hours * 30 + minutes * 0.5) * Math.PI / 180;
+            const minuteAngle = minutes * 6 * Math.PI / 180;
+            hourHand.rotation.z = -hourAngle;
+            minuteHand.rotation.z = -minuteAngle;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            // Auto rotate
+            watchGroup.rotation.y += 0.003;
+            // Float
+            watchGroup.position.y = Math.sin(Date.now() * 0.001) * 0.08;
+            // Tilt lerp
+            currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+            currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+            watchGroup.rotation.x = currentRotationX;
+            watchGroup.rotation.z = -currentRotationY; // Note: z for Y tilt
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize
+        window.addEventListener('resize', () => {
+            const size = isMobile ? 280 : 300;
+            renderer.setSize(size, size);
+            camera.aspect = 1;
+            camera.updateProjectionMatrix();
         });
 
         // Hero Text Animation
@@ -966,6 +1382,71 @@
                 onUpdate: () => { pEl.innerHTML = '$' + Math.round(priceObj.val).toLocaleString(); }
             });
         };
+
+        // NEW SECTIONS JS
+
+        // Heritage Timeline IO
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const ioTimeline = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        });
+        timelineItems.forEach(item => ioTimeline.observe(item));
+
+        // Testimonials Carousel
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial');
+        const dots = document.querySelectorAll('.dot');
+        let autoSlide;
+        function showTestimonial(index) {
+            testimonials.forEach(t => t.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            testimonials[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentTestimonial = index;
+        }
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => showTestimonial(i));
+        });
+        // Auto slide
+        autoSlide = setInterval(() => {
+            const next = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(next);
+        }, 5000);
+        // Pause on hover
+        document.querySelector('.testimonials').addEventListener('mouseenter', () => {
+            clearInterval(autoSlide);
+        });
+        document.querySelector('.testimonials').addEventListener('mouseleave', () => {
+            autoSlide = setInterval(() => {
+                const next = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(next);
+            }, 5000);
+        });
+
+        // Process Steps IO
+        const processSteps = document.querySelectorAll('.process-step');
+        const ioProcess = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.borderTopColor = 'var(--gold)';
+                    setTimeout(() => entry.target.style.transform = 'translateY(-10px)', 500);
+                }
+            });
+        });
+        processSteps.forEach(step => ioProcess.observe(step));
+
+        // Contact Form
+        const form = document.querySelector('.contact-form');
+        const formSuccess = document.querySelector('.form-success');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            form.style.display = 'none';
+            formSuccess.style.display = 'block';
+        });
 
     </script>
 </body>
