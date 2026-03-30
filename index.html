@@ -85,8 +85,8 @@
         }
         .hero-text-wrap { position: relative; z-index: 4; text-align: center; margin-top: 15vh; }
         .hero-title { font-family: var(--font-head); font-size: 96px; letter-spacing: 0.15em; line-height: 1; margin-bottom: 2rem; }
-        .hero-title span { display: inline-block; opacity: 0; transform: translateY(80px); }
-        .hero-subtitle { font-family: var(--font-body); font-size: 1.2rem; letter-spacing: 5px; color: #ccc; opacity: 0; text-transform: uppercase; margin-bottom: 3rem; }
+        .hero-title span { display: inline-block; opacity: 1; transform: translateY(0); }
+        .hero-subtitle { font-family: var(--font-body); font-size: 1.2rem; letter-spacing: 5px; color: #ccc; opacity: 1; text-transform: uppercase; margin-bottom: 3rem; }
         
         .cta-btn {
             display: inline-block; padding: 1.2rem 3rem; border: 1px solid var(--gold);
@@ -327,14 +327,88 @@
             .hero-title { font-size: 60px; }
             .footer-cols { flex-direction: column; gap: 2rem; align-items: center; text-align: center; }
             .f-col { text-align: center; }
+            .hero-watch { width: 180px; height: 290px; }
+            .craftsmanship { height: auto; flex-direction: column; }
+            .craft-panel { min-width: 100%; height: auto; padding: 4rem 2rem; }
+            .craft-divider { display: none; }
         }
         @media(max-width: 768px) {
             .nav-links { display: none; }
             .hamburger { display: flex; }
+            nav { padding: 1.5rem 2rem; }
+            .hero-title { font-size: 36px; letter-spacing: 0.08em; }
+            .hero-subtitle { font-size: 0.9rem; letter-spacing: 2px; }
+            .hero-text-wrap { margin-top: 20vh; }
+            .hero-watch { width: 140px; height: 225px; }
+            .anatomy-section, .collections, .customizer { padding: 4rem 1.5rem; }
+            .banner-word { font-size: 36px; }
+            .banner-words { flex-direction: column; gap: 0.5rem; }
+            .col-card img { height: 180px; }
+            .customizer-preview { width: 260px; height: 380px; }
+            .cw-case { width: 220px; height: 220px; left: 20px; top: 80px; }
+            .cw-dial { width: 190px; height: 190px; left: 35px; top: 95px; }
+            .cw-strap-top { left: 65px; width: 130px; height: 100px; }
+            .cw-strap-bot { left: 65px; width: 130px; height: 100px; }
+            .cw-glass { width: 220px; height: 220px; left: 20px; top: 80px; }
+            footer { padding: 4rem 1.5rem 2rem; }
+            .part-info { padding: 2rem; }
+            .part-name { font-size: 1.8rem; }
         }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10,10,10,0.97); z-index: 999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .mobile-menu.open { opacity: 1; pointer-events: all; }
+        .mobile-menu a {
+            font-family: var(--font-head); font-size: 2rem; color: #fff; text-decoration: none;
+            letter-spacing: 0.15em; transition: color 0.3s;
+        }
+        .mobile-menu a:hover { color: var(--gold); }
+        .mobile-close {
+            position: absolute; top: 2rem; right: 2rem; width: 40px; height: 40px;
+            background: none; border: 1px solid #555; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .mobile-close:hover { border-color: var(--gold); }
+        .mobile-close span { color: #fff; font-size: 1.4rem; line-height: 1; }
+
+        /* Touch device: hide custom cursor */
+        .touch #cursor-dot, .touch #cursor-ring { display: none; }
+        .touch, .touch * { cursor: auto !important; }
+
+        /* Loading overlay */
+        .loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep); z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+        .loader.done { opacity: 0; pointer-events: none; }
+        .loader-text { font-family: var(--font-head); font-size: 2.5rem; color: var(--gold); letter-spacing: 0.3em; margin-bottom: 2rem; }
+        .loader-bar { width: 200px; height: 2px; background: #222; border-radius: 1px; overflow: hidden; }
+        .loader-fill { width: 0%; height: 100%; background: var(--gold); transition: width 0.3s ease; }
     </style>
 </head>
 <body>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">AETERNA</div>
+        <div class="loader-bar"><div class="loader-fill" id="loader-fill"></div></div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <button class="mobile-close" id="mobile-close" aria-label="Close menu"><span>&times;</span></button>
+        <a href="#collections">Collections</a>
+        <a href="#anatomy">Craftsmanship</a>
+        <a href="#craft-wrap">History</a>
+        <a href="#customizer">Boutique</a>
+    </div>
 
     <!-- 1. Custom Cursor -->
     <div id="cursor-dot"></div>
@@ -346,7 +420,7 @@
         <div class="nav-links">
             <a href="#collections" class="c-hover">Collections</a>
             <a href="#anatomy" class="c-hover">Craftsmanship</a>
-            <a href="#about" class="c-hover">History</a>
+            <a href="#craft-wrap" class="c-hover">History</a>
             <a href="#" class="c-hover">Boutique</a>
         </div>
         <div class="hamburger c-hover">
@@ -539,14 +613,48 @@
             <div class="f-col"><h4>LEGAL</h4><a href="#">Privacy</a><a href="#">Terms</a></div>
         </div>
         <div class="socials">
-            <a href="#" class="c-hover"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204... (icon placeholder) "/><circle cx="12" cy="12" r="4"/><path d="M16 8h.01"/></svg></a>
-            <!-- Simplified icons for space -->
+            <a href="#" class="c-hover" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg></a>
+            <a href="#" class="c-hover" aria-label="Twitter / X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="#" class="c-hover" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="#" class="c-hover" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
         </div>
         <div class="copyright">© 2026 AETERNA — All Rights Reserved</div>
     </footer>
 
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        // 0. LOADING ANIMATION (Run First!)
+        const loader = document.getElementById('loader');
+        const loaderFill = document.getElementById('loader-fill');
+        let loadProgress = 0;
+        const processLoader = setInterval(() => {
+            loadProgress += Math.random() * 25 + 10;
+            if(loadProgress >= 100) {
+                loadProgress = 100;
+                clearInterval(processLoader);
+                if(loaderFill) loaderFill.style.width = '100%';
+                setTimeout(() => { 
+                    if(loader) {
+                        loader.classList.add('done'); 
+                        setTimeout(() => loader.remove(), 600); 
+                    }
+                }, 400);
+            } else {
+                if(loaderFill) loaderFill.style.width = loadProgress + '%';
+            }
+        }, 200);
+
+        // Fallback safety to remove loader if logic crashes
+        setTimeout(() => { if(loader) { loader.classList.add('done'); setTimeout(() => loader.remove(), 600); } }, 3000);
+
+        try {
+            gsap.registerPlugin(ScrollTrigger);
+        } catch(e) {
+            console.error("GSAP failed to load. Please check your internet connection.");
+        }
+
+        // TOUCH DEVICE DETECTION — disable custom cursor
+        const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+        if(isTouch) document.documentElement.classList.add('touch');
 
         // 1. CUSTOM CURSOR
         const cursorDot = document.getElementById('cursor-dot');
@@ -580,6 +688,24 @@
             else nav.classList.remove('scrolled');
         });
 
+        // Hamburger Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileClose = document.getElementById('mobile-close');
+        const hamburger = document.querySelector('.hamburger');
+        hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+        mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        mobileMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                const target = document.querySelector(anchor.getAttribute('href'));
+                if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+
         // 2. HERO PARTICLES & PARALLAX
         const canvas = document.getElementById('canvas-particles');
         const ctx = canvas.getContext('2d');
@@ -598,7 +724,7 @@
                 let p = particles[i];
                 p.y -= p.speedY;
                 if(p.y < 0) p.y = canvas.height;
-                ctx.fillStyle = \`rgba(201,168,76,\${p.alpha})\`;
+                ctx.fillStyle = `rgba(201,168,76,${p.alpha})`;
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
                 
                 // Connect lines
@@ -606,7 +732,7 @@
                     let p2 = particles[j];
                     let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
                     if(dist < 120) {
-                        ctx.strokeStyle = \`rgba(201,168,76,\${0.2 * (1 - dist/120)})\`;
+                        ctx.strokeStyle = `rgba(201,168,76,${0.2 * (1 - dist/120)})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                     }
@@ -623,20 +749,28 @@
         window.addEventListener('mousemove', (e) => {
             let x = (window.innerWidth / 2 - e.clientX) * 0.02;
             let y = (window.innerHeight / 2 - e.clientY) * 0.02;
-            heroWatch.style.transform = \`translate(\${x}px, \${y}px)\`;
+            heroWatch.style.transform = `translate(${x}px, ${y}px)`;
         });
 
         // Hero Text Animation
         const titleStr = "THE ORIGIN OF TIME";
         const titleContainer = document.getElementById('hero-title');
+        const originalText = titleContainer.textContent.trim();
         titleContainer.innerHTML = '';
         titleStr.split('').forEach((c, i) => {
-            let span = document.createElement('span'); span.innerHTML = c === ' ' ? '&nbsp;' : c;
+            let span = document.createElement('span');
+            span.innerHTML = c === ' ' ? '&nbsp;' : c;
+            span.style.opacity = '0';
+            span.style.transform = 'translateY(80px)';
             titleContainer.appendChild(span);
             // Staggered CSS animation via timeout
             setTimeout(() => { span.style.transform = 'translateY(0)'; span.style.opacity = '1'; span.style.transition = '0.5s ease-out'; }, 100 + i * 50);
         });
-        setTimeout(() => { document.getElementById('hero-subtitle').style.transition = '1s ease'; document.getElementById('hero-subtitle').style.opacity = '1'; }, 1200);
+        setTimeout(() => {
+            const sub = document.getElementById('hero-subtitle');
+            sub.style.transition = '1s ease';
+            sub.style.opacity = '1';
+        }, 1200);
 
         // 3. WATCH ANATOMY
         const partData = {
@@ -664,11 +798,11 @@
                 // create path
                 let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 path.setAttribute('class', 'anim-line');
-                path.setAttribute('id', \`line-\${id}\`);
+                path.setAttribute('id', `line-${id}`);
                 svgContainer.appendChild(path);
                 // create label
                 let lbl = document.createElement('div');
-                lbl.className = 'w-label'; lbl.id = \`lbl-\${id}\`; lbl.innerText = partData[id].name.toUpperCase();
+                lbl.className = 'w-label'; lbl.id = `lbl-${id}`; lbl.innerText = partData[id].name.toUpperCase();
                 labelsContainer.appendChild(lbl);
             });
         };
@@ -687,11 +821,11 @@
                 let tox = cx + (cx < containerRect.width/2 ? -80 : 80);
                 let toy = cy + (cy < containerRect.height/2 ? -40 : 40);
                 
-                let path = document.getElementById(\`line-\${id}\`);
-                if(path) path.setAttribute('d', \`M \${cx} \${cy} L \${cx + (tox-cx)/2} \${cy} L \${tox} \${toy}\`);
+                let path = document.getElementById(`line-${id}`);
+                if(path) path.setAttribute('d', `M ${cx} ${cy} L ${cx + (tox-cx)/2} ${cy} L ${tox} ${toy}`);
                 
-                let lbl = document.getElementById(\`lbl-\${id}\`);
-                if(lbl) { lbl.style.left = \`\${tox}px\`; lbl.style.top = \`\${toy}px\`; }
+                let lbl = document.getElementById(`lbl-${id}`);
+                if(lbl) { lbl.style.left = `${tox}px`; lbl.style.top = `${toy}px`; }
             });
         };
 
@@ -742,24 +876,61 @@
 
         // 5. CRAFTSMANSHIP SCROLL
         let sections = gsap.utils.toArray(".craft-panel");
-        gsap.to(sections, {
-            xPercent: -100 * (sections.length - 1),
-            ease: "none",
-            scrollTrigger: {
-                trigger: "#craft-wrap", pin: true, scrub: 1, end: () => "+=" + document.querySelector("#craft-wrap").offsetWidth
-            }
-        });
+        let horizTween;
         
-        sections.forEach((panel) => {
-            ScrollTrigger.create({
-                trigger: panel, start: "left center", horizontal: true,
-                containerAnimation: gsap.getById("horizontal-scroll"), // hook to container
-                onEnter: () => {
-                    panel.classList.add('active');
-                    let num = panel.querySelector('.craft-number');
-                    gsap.to(num, { innerHTML: num.getAttribute('data-target'), duration: 2, snap: {innerHTML: 1} });
+        if(window.innerWidth > 1024) {
+            horizTween = gsap.to(sections, {
+                xPercent: -100 * (sections.length - 1),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#craft-wrap", pin: true, scrub: 1, end: () => "+=" + document.querySelector("#craft-wrap").offsetWidth
                 }
             });
+        }
+        
+        sections.forEach((panel) => {
+            if(horizTween) {
+                ScrollTrigger.create({
+                    trigger: panel, start: "left center", horizontal: true,
+                    containerAnimation: horizTween,
+                    onEnter: () => {
+                        panel.classList.add('active');
+                        let num = panel.querySelector('.craft-number');
+                        if(num && !num.dataset.counted) {
+                            num.dataset.counted = '1';
+                            let target = parseInt(num.getAttribute('data-target'));
+                            let obj = { val: 0 };
+                            gsap.to(obj, {
+                                val: target, duration: 2, ease: "power1.out",
+                                onUpdate: () => { num.textContent = Math.round(obj.val); }
+                            });
+                        }
+                    },
+                    onLeaveBack: () => {
+                        panel.classList.remove('active');
+                        let num = panel.querySelector('.craft-number');
+                        if(num) { num.dataset.counted = ''; num.textContent = '0'; }
+                    }
+                });
+            } else {
+                // Vertical fallback for mobile/tablet
+                ScrollTrigger.create({
+                    trigger: panel, start: "top 70%",
+                    onEnter: () => {
+                        panel.classList.add('active');
+                        let num = panel.querySelector('.craft-number');
+                        if(num && !num.dataset.counted) {
+                            num.dataset.counted = '1';
+                            let target = parseInt(num.getAttribute('data-target'));
+                            let obj = { val: 0 };
+                            gsap.to(obj, {
+                                val: target, duration: 2, ease: "power1.out",
+                                onUpdate: () => { num.textContent = Math.round(obj.val); }
+                            });
+                        }
+                    }
+                });
+            }
         });
 
         // 6. CINEMATIC BANNER
@@ -789,9 +960,10 @@
             
             let total = cfgBase + cfgDial + cfgStrap;
             let pEl = document.getElementById('cfg-price');
-            gsap.to(pEl, {
-                innerHTML: total, duration: 0.5, snap: { innerHTML: 1 },
-                onUpdate: () => pEl.innerHTML = '$' + Number(pEl.innerHTML).toLocaleString()
+            let priceObj = { val: parseInt(pEl.innerHTML.replace(/[^0-9]/g, '')) || 0 };
+            gsap.to(priceObj, {
+                val: total, duration: 0.5, ease: "power1.out",
+                onUpdate: () => { pEl.innerHTML = '$' + Math.round(priceObj.val).toLocaleString(); }
             });
         };
 
