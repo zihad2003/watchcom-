@@ -1264,9 +1264,16 @@
 
             // Render Engine Section
             if(window.eRenderer && window.eScene && window.eCamera && window.ePendulumGroup) {
-                window.ePendulumGroup.rotation.z = Math.sin(Date.now() * 0.015) * 1.5;
-                window.eGroup.rotation.y += 0.005;
-                window.eGroup.rotation.x = Math.sin(Date.now() * 0.002) * 0.2;
+                // Natural mechanical oscillation amplitude & speed
+                window.ePendulumGroup.rotation.z = Math.sin(Date.now() * 0.012) * 1.2;
+                
+                // Escape gear ticks rapidly forward
+                if(window.escapeGear) window.escapeGear.rotation.z += 0.05;
+
+                // Slow rotation of the entire view so the user can see depth
+                window.eGroup.rotation.y += 0.002;
+                window.eGroup.rotation.x = Math.sin(Date.now() * 0.001) * 0.15;
+                
                 window.eRenderer.render(window.eScene, window.eCamera);
             }
         }
@@ -1308,33 +1315,59 @@
             const engineMetal = new THREE.MeshPhysicalMaterial({ color: 0x888888, metalness: 1.0, roughness: 0.2, clearcoat: 1.0 });
             const engineGold = new THREE.MeshPhysicalMaterial({ color: 0xc9a84c, metalness: 1.0, roughness: 0.1, clearcoat: 1.0 });
             
-            // Bridge
-            const bridge = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.1, 0.2), engineMetal);
-            window.eGroup.add(bridge);
+            // Elegant Bridge (X-shape)
+            const bridgeX = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.15, 0.1), engineMetal);
+            const bridgeY = new THREE.Mesh(new THREE.BoxGeometry(0.15, 3.8, 0.1), engineMetal);
+            const bridgeAnchor = new THREE.Group();
+            bridgeAnchor.add(bridgeX);
+            bridgeAnchor.add(bridgeY);
+            bridgeAnchor.position.z = 0.5;
+            window.eGroup.add(bridgeAnchor);
 
-            // Core
-            const eCore = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.4, 32), engineMetal);
+            // Core Axis
+            const eCore = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.8, 32), engineGold);
             eCore.rotation.x = Math.PI / 2;
             window.eGroup.add(eCore);
 
             window.ePendulumGroup = new THREE.Group();
             window.eGroup.add(window.ePendulumGroup);
 
-            // Arm
-            const eArm = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.1, 0.2), engineGold);
-            window.ePendulumGroup.add(eArm);
-
-            // Ring
-            const eRing = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.1, 16, 64), engineGold);
+            // Balance Wheel Ring
+            const eRing = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.06, 16, 64), engineGold);
             window.ePendulumGroup.add(eRing);
             
-            // Screws on ring
-            for(let i=0; i<6; i++) {
-                const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.3, 16), engineMetal);
-                const angle = (i * Math.PI) / 3;
-                screw.position.set(Math.cos(angle) * 1.4, Math.sin(angle) * 1.4, 0);
+            // Balance Wheel 3 Arms
+            for(let i=0; i<3; i++) {
+                const armGeom = new THREE.BoxGeometry(1.5, 0.08, 0.04);
+                const arm = new THREE.Mesh(armGeom, engineGold);
+                arm.position.x = 0.75;
+                const pivot = new THREE.Group();
+                pivot.add(arm);
+                pivot.rotation.z = (i * Math.PI * 2) / 3;
+                window.ePendulumGroup.add(pivot);
+            }
+            
+            // Weight Screws on ring
+            for(let i=0; i<12; i++) {
+                const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.18, 16), engineMetal);
+                const angle = (i * Math.PI * 2) / 12;
+                screw.position.set(Math.cos(angle) * 1.5, Math.sin(angle) * 1.5, 0);
                 screw.rotation.x = Math.PI / 2;
                 window.ePendulumGroup.add(screw);
+            }
+
+            // Lower Escape Gear
+            window.escapeGear = new THREE.Group();
+            window.escapeGear.position.z = -0.3;
+            window.eGroup.add(window.escapeGear);
+            const gearRing = new THREE.Mesh(new THREE.TorusGeometry(0.8, 0.05, 16, 64), engineMetal);
+            window.escapeGear.add(gearRing);
+            for(let i=0; i<15; i++) {
+                const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.15, 0.05), engineMetal);
+                const angle = (i * Math.PI * 2) / 15;
+                tooth.position.set(Math.cos(angle) * 0.8, Math.sin(angle) * 0.8, 0);
+                tooth.rotation.z = angle + Math.PI/2;
+                window.escapeGear.add(tooth);
             }
         }
         initEngineSection();
