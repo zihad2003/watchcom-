@@ -323,7 +323,8 @@
         .timeline-item.visible { opacity: 1; }
         .timeline-item:nth-child(even).visible { transform: translateX(-50px); }
         .timeline-item:nth-child(odd).visible { transform: translateX(50px); }
-        .timeline-dot { width: 20px; height: 20px; background: var(--gold); border-radius: 50%; margin: 0 2rem; flex-shrink: 0; }
+        .timeline-dot { width: 20px; height: 20px; background: var(--gold); border-radius: 50%; margin: 0 2rem; flex-shrink: 0; transition: transform 0.3s, box-shadow 0.3s; }
+        .timeline-item:hover .timeline-dot { transform: scale(1.5); box-shadow: 0 0 20px var(--gold); }
         .timeline-content { text-align: left; max-width: 300px; }
         .timeline-year { font-family: var(--font-head); font-size: 3rem; color: var(--gold); margin-bottom: 0.5rem; }
         .timeline-title { font-family: var(--font-body); font-size: 1.5rem; font-weight: 500; color: #fff; margin-bottom: 0.5rem; }
