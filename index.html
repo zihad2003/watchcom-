@@ -168,6 +168,19 @@
         .btn-assemble { margin-top: 2rem; background: var(--gold); color: #000; border: none; padding: 1rem 2rem; font-family: var(--font-body); font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
 
         /* -------------------------------------------------------------------------- */
+        /* 3.5 TOURBILLON ENGINE SECTION */
+        /* -------------------------------------------------------------------------- */
+        .engine-section {
+            padding: 8rem 4rem; min-height: 80vh; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, #151515 0%, var(--bg-deep) 60%);
+            position: relative; overflow: hidden; flex-direction: column; text-align: center; border-bottom: 1px solid rgba(201,168,76,0.1);
+        }
+        .engine-text { position: relative; z-index: 10; margin-bottom: 2rem; }
+        .engine-text h2 { font-family: var(--font-head); font-size: 4rem; color: var(--gold); letter-spacing: 0.15em; line-height: 1; }
+        .engine-text p { font-size: 1rem; color: #888; max-width: 600px; margin: 1.5rem auto 0; text-transform: uppercase; letter-spacing: 2px; }
+        #engine-3d { width: 100%; height: 600px; z-index: 5; }
+
+        /* -------------------------------------------------------------------------- */
         /* 4. COLLECTIONS GRID */
         /* -------------------------------------------------------------------------- */
         .collections { padding: 8rem 4rem; background: var(--bg-panel); }
@@ -420,6 +433,9 @@
             .craftsmanship { height: auto; flex-direction: column; }
             .craft-panel { min-width: 100%; height: auto; padding: 4rem 2rem; }
             .craft-divider { display: none; }
+            .engine-section { padding: 4rem 1.5rem; }
+            .engine-text h2 { font-size: 3rem; }
+            #engine-3d { height: 400px; }
         }
         @media(max-width: 768px) {
             .nav-links { display: none; }
@@ -571,6 +587,15 @@
                 <button class="btn-assemble c-hover" id="btn-assemble">Assemble</button>
             </div>
         </div>
+    </section>
+
+    <!-- 3.5 Tourbillon Engine Section -->
+    <section class="engine-section" id="engine">
+        <div class="engine-text">
+            <h2>THE HEARTBEAT</h2>
+            <p>28,800 vibrations per hour. A mesmerizing mechanical ballet suspended in three dimensions.</p>
+        </div>
+        <canvas id="engine-3d"></canvas>
     </section>
 
     <!-- 4. Collections Grid -->
@@ -1123,41 +1148,16 @@
         dialMesh.rotation.x = -Math.PI / 2;
         watchGroup.add(dialMesh);
 
-        // Sub-dials (Left and Right)
+        // Sub-dials
         const subDialGeom = new THREE.CircleGeometry(0.25, 32);
         const subDialMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.5 });
-        for(let i=0; i<2; i++) {
+        for(let i=0; i<3; i++) {
             const sub = new THREE.Mesh(subDialGeom, subDialMat);
-            const angle = i === 0 ? Math.PI + Math.PI/6 : -Math.PI/6;
+            const angle = (i * Math.PI * 2) / 3;
             sub.position.set(Math.cos(angle) * 0.45, 0.22, Math.sin(angle) * 0.45);
             sub.rotation.x = -Math.PI / 2;
             watchGroup.add(sub);
         }
-
-        // 3D Pendulum / Open-Heart Tourbillon (6 o'clock)
-        const tourbillonGroup = new THREE.Group();
-        tourbillonGroup.position.set(0, 0.21, 0.55);
-        watchGroup.add(tourbillonGroup);
-
-        const holeMat = new THREE.MeshBasicMaterial({ color: 0x010101 });
-        const hole = new THREE.Mesh(new THREE.CircleGeometry(0.28, 32), holeMat);
-        hole.rotation.x = -Math.PI / 2;
-        tourbillonGroup.add(hole);
-
-        const pendulumGroup = new THREE.Group();
-        tourbillonGroup.add(pendulumGroup);
-
-        const pendulumCore = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.1, 16), metalMat);
-        pendulumGroup.add(pendulumCore);
-        
-        const pendulumArm = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.02, 0.06), goldMat);
-        pendulumArm.position.y = 0.04;
-        pendulumGroup.add(pendulumArm);
-
-        const pendulumRing = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.03, 16, 64), goldMat);
-        pendulumRing.rotation.x = Math.PI / 2;
-        pendulumRing.position.y = 0.04;
-        pendulumGroup.add(pendulumRing);
 
         // Hour Markers
         for (let i = 0; i < 12; i++) {
@@ -1251,9 +1251,6 @@
             requestAnimationFrame(animate);
             // Slow elegant auto-rotation
             watchGroup.rotation.y += 0.002;
-            
-            // Pendulum high-frequency swing (simulating 4Hz / 28,800 vph)
-            pendulumGroup.rotation.y = Math.sin(Date.now() * 0.015) * 1.5;
 
             // Float
             watchGroup.position.y = Math.sin(Date.now() * 0.001) * 0.1;
@@ -1264,8 +1261,84 @@
             watchGroup.rotation.z = -currentRotationY; 
             
             renderer.render(scene, camera);
+
+            // Render Engine Section
+            if(window.eRenderer && window.eScene && window.eCamera && window.ePendulumGroup) {
+                window.ePendulumGroup.rotation.z = Math.sin(Date.now() * 0.015) * 1.5;
+                window.eGroup.rotation.y += 0.005;
+                window.eGroup.rotation.x = Math.sin(Date.now() * 0.002) * 0.2;
+                window.eRenderer.render(window.eScene, window.eCamera);
+            }
         }
         animate();
+
+        // -----------------------------------------
+        // TOURBILLON ENGINE 3D
+        // -----------------------------------------
+        function initEngineSection() {
+            const engineCanvas = document.getElementById('engine-3d');
+            window.eScene = new THREE.Scene();
+            window.eCamera = new THREE.PerspectiveCamera(50, engineCanvas.clientWidth / 600, 0.1, 100);
+            window.eCamera.position.z = 4;
+            window.eRenderer = new THREE.WebGLRenderer({ canvas: engineCanvas, alpha: true, antialias: true });
+            
+            function resizeEngine() {
+                const w = engineCanvas.clientWidth;
+                const h = engineCanvas.clientHeight || 500;
+                window.eRenderer.setSize(w, h, false);
+                window.eCamera.aspect = w / h;
+                window.eCamera.updateProjectionMatrix();
+            }
+            window.addEventListener('resize', resizeEngine);
+            resizeEngine();
+
+            const eLight = new THREE.PointLight(0xffdf80, 2, 50);
+            eLight.position.set(2, 2, 3);
+            window.eScene.add(eLight);
+            
+            const eRim = new THREE.PointLight(0x4488ff, 1.5, 50);
+            eRim.position.set(-3, -2, 1);
+            window.eScene.add(eRim);
+            
+            window.eScene.add(new THREE.AmbientLight(0xffffff, 0.2));
+
+            window.eGroup = new THREE.Group();
+            window.eScene.add(window.eGroup);
+
+            const engineMetal = new THREE.MeshPhysicalMaterial({ color: 0x888888, metalness: 1.0, roughness: 0.2, clearcoat: 1.0 });
+            const engineGold = new THREE.MeshPhysicalMaterial({ color: 0xc9a84c, metalness: 1.0, roughness: 0.1, clearcoat: 1.0 });
+            
+            // Bridge
+            const bridge = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.1, 0.2), engineMetal);
+            window.eGroup.add(bridge);
+
+            // Core
+            const eCore = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.4, 32), engineMetal);
+            eCore.rotation.x = Math.PI / 2;
+            window.eGroup.add(eCore);
+
+            window.ePendulumGroup = new THREE.Group();
+            window.eGroup.add(window.ePendulumGroup);
+
+            // Arm
+            const eArm = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.1, 0.2), engineGold);
+            window.ePendulumGroup.add(eArm);
+
+            // Ring
+            const eRing = new THREE.Mesh(new THREE.TorusGeometry(1.4, 0.1, 16, 64), engineGold);
+            window.ePendulumGroup.add(eRing);
+            
+            // Screws on ring
+            for(let i=0; i<6; i++) {
+                const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.3, 16), engineMetal);
+                const angle = (i * Math.PI) / 3;
+                screw.position.set(Math.cos(angle) * 1.4, Math.sin(angle) * 1.4, 0);
+                screw.rotation.x = Math.PI / 2;
+                window.ePendulumGroup.add(screw);
+            }
+        }
+        initEngineSection();
+
 
         // Resize
         window.addEventListener('resize', () => {
