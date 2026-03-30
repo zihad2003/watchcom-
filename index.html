@@ -1113,15 +1113,15 @@
         watchGroup.add(strapBottom);
 
         // Brand Text
-        const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 64;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#c9a84c';
-        ctx.font = 'bold 32px Cormorant Garamond';
-        ctx.textAlign = 'center';
-        ctx.fillText('AETERNA', 128, 40);
-        const textTexture = new THREE.CanvasTexture(canvas);
+        const textCanvas = document.createElement('canvas');
+        textCanvas.width = 256;
+        textCanvas.height = 64;
+        const textCtx = textCanvas.getContext('2d');
+        textCtx.fillStyle = '#c9a84c';
+        textCtx.font = 'bold 32px Cormorant Garamond';
+        textCtx.textAlign = 'center';
+        textCtx.fillText('AETERNA', 128, 40);
+        const textTexture = new THREE.CanvasTexture(textCanvas);
         const textGeom = new THREE.PlaneGeometry(1.5, 0.4);
         const textMat = new THREE.MeshBasicMaterial({ map: textTexture, transparent: true });
         const textMesh = new THREE.Mesh(textGeom, textMat);
